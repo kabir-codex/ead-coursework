@@ -1,0 +1,7 @@
+<jasperReport name="minimal_test" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<title height="50">
+		<element kind="staticText" x="0" y="0" width="200" height="30">
+			<text><![CDATA[Hello Test]]></text>
+		</element>
+	</title>
+</jasperReport>

@@ -1,0 +1,163 @@
+<!-- Created with Jaspersoft Studio version 7.0.6.final using JasperReports Library version 7.0.6-5d2a603fdc6b3db8f842a83383e594f41891534d  -->
+<jasperReport name="booking_summary_report" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="fd5060b0-0107-42ad-9139-3d3918c78c4d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TourEase_MySQL"/>
+	<query language="SQL"><![CDATA[SELECT
+                b.booking_id,
+                c.full_name AS customer_name,
+                r.room_number,
+                r.room_type,
+                IFNULL(p.package_name, 'No Package') AS package_name,
+                b.checkin_date,
+                b.checkout_date,
+                DATEDIFF(b.checkout_date, b.checkin_date) AS nights,
+                b.total_amount,
+                b.status
+            FROM bookings b
+            JOIN customers c ON b.customer_id = c.customer_id
+            JOIN rooms r ON b.room_id = r.room_id
+            LEFT JOIN packages p ON b.package_id = p.package_id
+            ORDER BY b.booking_date DESC]]></query>
+	<field name="booking_id" class="java.lang.Integer"/>
+	<field name="customer_name" class="java.lang.String"/>
+	<field name="room_number" class="java.lang.String"/>
+	<field name="room_type" class="java.lang.String"/>
+	<field name="package_name" class="java.lang.String"/>
+	<field name="checkin_date" class="java.sql.Date"/>
+	<field name="checkout_date" class="java.sql.Date"/>
+	<field name="nights" class="java.lang.Integer"/>
+	<field name="total_amount" class="java.math.BigDecimal"/>
+	<field name="status" class="java.lang.String"/>
+	<variable name="GRAND_TOTAL" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{total_amount}]]></expression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal("0.00")]]></initialValueExpression>
+	</variable>
+	<variable name="RECORD_COUNT" calculation="Count" class="java.lang.Integer">
+		<expression><![CDATA[$F{booking_id}]]></expression>
+	</variable>
+	<title height="70">
+		<element kind="rectangle" uuid="2c049146-59db-4489-9485-7d0162926879" mode="Opaque" x="0" y="0" width="782" height="70" backcolor="#1A73E8">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="staticText" uuid="d03ce97f-1a84-41ae-beb2-afbe6dc4b8c4" x="10" y="8" width="762" height="28" forecolor="#FFFFFF" fontSize="18.0" bold="true">
+			<text><![CDATA[TOUREASE - BOOKING SUMMARY REPORT]]></text>
+		</element>
+		<element kind="staticText" uuid="e9100247-0b90-48e1-9088-12c695cf01cf" x="10" y="40" width="600" height="16" forecolor="#B3E5FC" fontSize="10.0">
+			<text><![CDATA[TourEase Hotel & Tourism Management System | Colombo, Sri Lanka]]></text>
+		</element>
+		<element kind="textField" uuid="c9df1ec1-b9ff-404e-b239-2d120a938382" x="580" y="8" width="192" height="16" forecolor="#FFFFFF" fontSize="9.0" hTextAlign="Right">
+			<expression><![CDATA["Page " + $V{PAGE_NUMBER} + " of " + $V{PAGE_COUNT}]]></expression>
+		</element>
+		<element kind="textField" uuid="fea8ba51-53c8-4316-b2f1-7ec838162691" x="10" y="56" width="300" height="12" forecolor="#B3E5FC" fontSize="8.0" pattern="dd MMMM yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</title>
+	<columnHeader height="22">
+		<element kind="rectangle" uuid="b634835b-3936-4f55-97ab-d528194fc40a" mode="Opaque" x="0" y="0" width="782" height="22" backcolor="#E3F2FD">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="staticText" uuid="40ff24ac-4bed-4466-a983-0598b5c8876a" x="0" y="4" width="50" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true">
+			<text><![CDATA[BK ID]]></text>
+		</element>
+		<element kind="staticText" uuid="60228391-099f-4d39-8c38-51ff2380e183" x="50" y="4" width="140" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true">
+			<text><![CDATA[Customer Name]]></text>
+		</element>
+		<element kind="staticText" uuid="96d25031-3186-4f34-a00b-c85360bbdef7" x="190" y="4" width="55" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true">
+			<text><![CDATA[Room]]></text>
+		</element>
+		<element kind="staticText" uuid="097241ed-cb9d-45e3-a31b-b32edc2003b8" x="245" y="4" width="60" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true">
+			<text><![CDATA[Type]]></text>
+		</element>
+		<element kind="staticText" uuid="22a6fc7e-2538-416a-8d0b-4edff7b9893c" x="305" y="4" width="140" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true">
+			<text><![CDATA[Package]]></text>
+		</element>
+		<element kind="staticText" uuid="533888f5-f59f-48c6-b821-e6e5a2f7ba34" x="445" y="4" width="70" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true">
+			<text><![CDATA[Check-In]]></text>
+		</element>
+		<element kind="staticText" uuid="fe2d5bda-cb08-4cee-9d5d-4257023ce2fd" x="515" y="4" width="70" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true">
+			<text><![CDATA[Check-Out]]></text>
+		</element>
+		<element kind="staticText" uuid="39472623-0ee0-4c7f-8e1b-7834dbe44c7f" x="585" y="4" width="30" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Nts]]></text>
+		</element>
+		<element kind="staticText" uuid="6a4e3f74-965a-41b2-accd-8778b82cab82" x="615" y="4" width="100" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true" hTextAlign="Right">
+			<text><![CDATA[Amount (LKR)]]></text>
+		</element>
+		<element kind="staticText" uuid="82f08727-d016-4daa-9cfc-26a957816efe" x="715" y="4" width="67" height="14" forecolor="#1A73E8" fontSize="8.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Status]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="18">
+			<element kind="textField" uuid="b6de3898-15a8-4492-81c2-fd9db08646c3" x="0" y="2" width="50" height="14" fontSize="8.0">
+				<expression><![CDATA["BK-" + $F{booking_id}]]></expression>
+			</element>
+			<element kind="textField" uuid="d84bf828-d275-42df-a9de-5d5310a886ce" x="50" y="2" width="140" height="14" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{customer_name}]]></expression>
+			</element>
+			<element kind="textField" uuid="3f7cc9f0-6c7a-4348-bf9d-5b464eb58528" x="190" y="2" width="55" height="14" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{room_number}]]></expression>
+			</element>
+			<element kind="textField" uuid="53e90cf1-9d80-46fd-9869-266d4ae07447" x="245" y="2" width="60" height="14" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{room_type}]]></expression>
+			</element>
+			<element kind="textField" uuid="02acc057-1fa1-4ef7-accb-407b60f767b4" x="305" y="2" width="140" height="14" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{package_name}]]></expression>
+			</element>
+			<element kind="textField" uuid="81d1f94b-0f91-4b59-9172-637b0f55ca57" x="445" y="2" width="70" height="14" fontSize="8.0" pattern="dd/MM/yyyy" blankWhenNull="true">
+				<expression><![CDATA[$F{checkin_date}]]></expression>
+			</element>
+			<element kind="textField" uuid="8315dc83-def0-4ff1-b0b0-87c6bdb1f8d9" x="515" y="2" width="70" height="14" fontSize="8.0" pattern="dd/MM/yyyy" blankWhenNull="true">
+				<expression><![CDATA[$F{checkout_date}]]></expression>
+			</element>
+			<element kind="textField" uuid="a75ed09f-c7e1-4524-8036-bc6c894aa064" x="585" y="2" width="30" height="14" fontSize="8.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{nights}]]></expression>
+			</element>
+			<element kind="textField" uuid="6baef00e-33f5-4d6d-9204-3af46e7fb3a1" x="615" y="2" width="100" height="14" forecolor="#1A7334" fontSize="8.0" pattern="#,##0.00" blankWhenNull="true" bold="true" hTextAlign="Right">
+				<expression><![CDATA[$F{total_amount}]]></expression>
+			</element>
+			<element kind="textField" uuid="656da935-3d2e-48cd-9f93-e8d70b7c01db" x="715" y="2" width="67" height="14" fontSize="8.0" blankWhenNull="true" bold="true" hTextAlign="Center">
+				<expression><![CDATA[$F{status}]]></expression>
+			</element>
+			<element kind="line" uuid="b4e82d9f-ed7f-43a7-9617-bccb9b2acc3a" x="0" y="17" width="782" height="1" forecolor="#E3F2FD"/>
+		</band>
+	</detail>
+	<summary height="270">
+		<element kind="chart" chartType="line" uuid="a1b2c3d4-1111-4a2b-9c3d-000000000001" x="0" y="0" width="782" height="196" showLegend="true" legendPosition="Bottom" titlePosition="Top" titleColor="#1A73E8" backcolor="#FFFFFF">
+			<titleExpression><![CDATA["Booking Revenue Trend by Status - Room Type Breakdown"]]></titleExpression>
+			<dataset kind="category">
+				<series>
+					<seriesExpression><![CDATA[$F{status}]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{room_type}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{total_amount}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot backcolor="#E3F2FD" orientation="Vertical" backgroundAlpha="1.0" foregroundAlpha="0.9" showLines="true" showShapes="true">
+				<seriesColor order="0" color="#1A73E8"/>
+				<seriesColor order="1" color="#FF8F00"/>
+				<seriesColor order="2" color="#1A7334"/>
+				<seriesColor order="3" color="#D32F2F"/>
+			</plot>
+		</element>
+		<element kind="line" uuid="999d5eb0-bf9d-47a8-a042-4bfa1a2b333b" x="0" y="204" width="782" height="1" forecolor="#1A73E8">
+			<pen lineWidth="2.0"/>
+		</element>
+		<element kind="staticText" uuid="76c475bd-23e0-4a72-8f08-83ad3debfe4d" x="0" y="212" width="200" height="20" forecolor="#1A73E8" fontSize="12.0" bold="true">
+			<text><![CDATA[SUMMARY]]></text>
+		</element>
+		<element kind="staticText" uuid="ea0b45b5-6e77-4dd9-8a95-a39b02ec832d" x="0" y="234" width="180" height="16" fontSize="9.0">
+			<text><![CDATA[Total Bookings:]]></text>
+		</element>
+		<element kind="textField" uuid="b08a2cfb-e0ac-46f5-a024-8fc0eb82d469" x="180" y="234" width="100" height="16" forecolor="#1A73E8" fontSize="9.0" bold="true">
+			<expression><![CDATA[$V{RECORD_COUNT}]]></expression>
+		</element>
+		<element kind="staticText" uuid="5a2d1b3e-ddaa-4993-8ab4-e47401ea0fb3" x="400" y="234" width="215" height="16" fontSize="10.0" hTextAlign="Right">
+			<text><![CDATA[TOTAL REVENUE (LKR):]]></text>
+		</element>
+		<element kind="textField" uuid="3f119c44-e2b1-4b5d-a1e2-b9b47530e22e" x="615" y="234" width="167" height="16" forecolor="#1A7334" fontSize="13.0" pattern="#,##0.00" bold="true" hTextAlign="Right">
+			<expression><![CDATA[$V{GRAND_TOTAL}]]></expression>
+		</element>
+		<element kind="staticText" uuid="fc4105b5-c6fa-48fb-91af-c032f4555807" x="0" y="248" width="782" height="10" forecolor="#9E9E9E" fontSize="7.0" hTextAlign="Center">
+			<text><![CDATA[TourEase Hotel & Tourism Management System - Confidential Management Report]]></text>
+		</element>
+	</summary>
+</jasperReport>

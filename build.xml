@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    TourEase Hotel & Tourism Management System
+    NetBeans ANT Build File
+    ===================================================
+    Targets:
+      clean        – delete build artefacts
+      compile      – compile all Java sources
+      jar          – build runnable JAR
+      run          – run the application
+      javadoc      – generate API documentation
+      all (default)– clean + compile + jar
+-->
+<project name="TourEase" default="all" basedir=".">
+
+    <!-- ── Properties ─────────────────────────────────────────────────────── -->
+    <property name="src.dir"       value="src"/>
+    <property name="build.dir"     value="build"/>
+    <property name="dist.dir"      value="dist"/>
+    <property name="lib.dir"       value="lib"/>
+    <property name="resources.dir" value="resources"/>
+    <property name="doc.dir"       value="doc"/>
+    <property name="main.class"    value="view.LoginForm"/>
+    <property name="jar.name"      value="TourEase.jar"/>
+
+    <!-- ── Classpath ──────────────────────────────────────────────────────── -->
+    <path id="project.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement location="${build.dir}/classes"/>
+    </path>
+
+    <!-- ── INIT ───────────────────────────────────────────────────────────── -->
+    <target name="init">
+        <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${doc.dir}"/>
+        <echo message="[TourEase] Build initialised."/>
+    </target>
+
+    <!-- ── CLEAN ──────────────────────────────────────────────────────────── -->
+    <target name="clean" description="Remove all build artefacts">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${doc.dir}"/>
+        <echo message="[TourEase] Clean complete."/>
+    </target>
+
+    <!-- ── COMPILE ────────────────────────────────────────────────────────── -->
+    <target name="compile" depends="init" description="Compile Java sources">
+        <javac srcdir="${src.dir}"
+               destdir="${build.dir}/classes"
+               classpathref="project.classpath"
+               release="17"
+               encoding="UTF-8"
+               debug="true"
+               includeantruntime="false">
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+        <!-- Copy package-relative resources (images etc. living next to .java files in src/) -->
+        <copy todir="${build.dir}/classes">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.java"/>
+                <exclude name="**/*.form"/>
+            </fileset>
+        </copy>
+        <!-- Copy resources into build dir so classpath loading works -->
+        <copy todir="${build.dir}/classes/resources">
+            <fileset dir="${resources.dir}"/>
+        </copy>
+        <!-- Also copy to project root so filesystem fallback works when running via ant run -->
+        <copy todir="${basedir}/resources">
+            <fileset dir="${resources.dir}"/>
+        </copy>
+        <echo message="[TourEase] Compilation complete."/>
+    </target>
+
+    
+    <!-- ── JAR ────────────────────────────────────────────────────────────── -->
+    <target name="jar" depends="compile" description="Build runnable JAR">
+        <manifestclasspath property="jar.classpath" jarfile="${dist.dir}/${jar.name}">
+            <classpath refid="project.classpath"/>
+        </manifestclasspath>
+        <jar destfile="${dist.dir}/${jar.name}"
+             basedir="${build.dir}/classes"
+             compress="true">
+            <manifest>
+                <attribute name="Main-Class"       value="${main.class}"/>
+                <attribute name="Implementation-Title" value="TourEase Hotel &amp; Tourism Management System"/>
+                <attribute name="Implementation-Version" value="1.0.0"/>
+                <attribute name="Built-By"         value="TourEase Team"/>
+                <attribute name="Class-Path"       value="${jar.classpath}"/>
+            </manifest>
+        </jar>
+        <echo message="[TourEase] JAR built: ${dist.dir}/${jar.name}"/>
+    </target>
+
+    <!-- ── RUN ────────────────────────────────────────────────────────────── -->
+    <target name="run" depends="jar" description="Launch the application">
+        <java jar="${dist.dir}/${jar.name}" fork="true">
+            <jvmarg value="-Xms256m"/>
+            <jvmarg value="-Xmx512m"/>
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+        </java>
+    </target>
+
+    <!-- ── JAVADOC ────────────────────────────────────────────────────────── -->
+    <target name="javadoc" depends="compile" description="Generate API documentation">
+        <javadoc sourcepath="${src.dir}"
+                 destdir="${doc.dir}"
+                 classpathref="project.classpath"
+                 windowtitle="TourEase – API Documentation"
+                 doctitle="TourEase Hotel &amp; Tourism Management System"
+                 author="true"
+                 version="true"
+                 use="true"
+                 encoding="UTF-8">
+            <packageset dir="${src.dir}" defaultexcludes="yes"/>
+        </javadoc>
+        <echo message="[TourEase] Javadoc generated in ${doc.dir}"/>
+    </target>
+
+    <!-- ── ALL (default) ──────────────────────────────────────────────────── -->
+    <target name="all" depends="clean,compile,jar"
+            description="Full build: clean → compile → jar">
+        <echo message="[TourEase] Build complete. Run: java -jar ${dist.dir}/${jar.name}"/>
+    </target>
+<target name="-post-jar">
+    <copy todir="${dist.dir}/resources">
+        <fileset dir="${basedir}/resources"/>
+    </copy>
+</target>
+
+</project>

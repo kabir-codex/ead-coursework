@@ -1,0 +1,166 @@
+<!-- Created with Jaspersoft Studio version 7.0.6.final using JasperReports Library version 7.0.6-5d2a603fdc6b3db8f842a83383e594f41891534d  -->
+<jasperReport name="package_revenue_report" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="9027bde1-1d20-4b01-935a-37787fb8b5a2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TourEase_MySQL"/>
+	<query language="SQL"><![CDATA[SELECT
+                p.package_id,
+                p.package_name,
+                p.destination,
+                p.duration_days,
+                p.price AS package_price,
+                p.status AS package_status,
+                COUNT(b.booking_id) AS total_bookings,
+                COALESCE(SUM(py.amount), 0) AS total_revenue,
+                COALESCE(AVG(py.amount), 0) AS avg_payment
+            FROM packages p
+            LEFT JOIN bookings b ON p.package_id = b.package_id
+                AND b.status != 'CANCELLED'
+            LEFT JOIN payments py ON b.booking_id = py.booking_id
+            GROUP BY p.package_id, p.package_name, p.destination,
+                     p.duration_days, p.price, p.status
+            ORDER BY total_revenue DESC]]></query>
+	<field name="package_id" class="java.lang.Integer"/>
+	<field name="package_name" class="java.lang.String"/>
+	<field name="destination" class="java.lang.String"/>
+	<field name="duration_days" class="java.lang.Integer"/>
+	<field name="package_price" class="java.math.BigDecimal"/>
+	<field name="package_status" class="java.lang.String"/>
+	<field name="total_bookings" class="java.lang.Long"/>
+	<field name="total_revenue" class="java.math.BigDecimal"/>
+	<field name="avg_payment" class="java.math.BigDecimal"/>
+	<variable name="GRAND_REVENUE" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{total_revenue}]]></expression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal("0.00")]]></initialValueExpression>
+	</variable>
+	<variable name="GRAND_BOOKINGS" calculation="Sum" class="java.lang.Long">
+		<expression><![CDATA[$F{total_bookings}]]></expression>
+	</variable>
+	<variable name="MAX_REVENUE" calculation="Highest" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{total_revenue}]]></expression>
+	</variable>
+	<title height="78">
+		<element kind="rectangle" uuid="5297b952-0c0f-4bd8-92d7-0d2aefabaf1c" mode="Opaque" x="0" y="0" width="782" height="78" backcolor="#00695C">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="rectangle" uuid="44ed291e-a7fb-487e-bbad-66bee6ed63f7" mode="Opaque" x="0" y="70" width="782" height="8" backcolor="#FF8F00">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="staticText" uuid="01273df0-ef44-4863-8d6c-15411552f952" x="10" y="8" width="762" height="28" forecolor="#FFFFFF" fontSize="18.0" bold="true">
+			<text><![CDATA[TOUREASE - TOUR PACKAGE REVENUE REPORT]]></text>
+		</element>
+		<element kind="staticText" uuid="89280803-347f-4250-98a1-9caf6d81f51f" x="10" y="40" width="600" height="16" forecolor="#B2DFDB" fontSize="10.0">
+			<text><![CDATA[TourEase Hotel & Tourism Management System | Colombo, Sri Lanka]]></text>
+		</element>
+		<element kind="textField" uuid="943dc460-a02e-40f3-95ce-83b92e629af8" x="580" y="8" width="192" height="16" forecolor="#FFFFFF" fontSize="9.0" hTextAlign="Right">
+			<expression><![CDATA["Page " + $V{PAGE_NUMBER} + " of " + $V{PAGE_COUNT}]]></expression>
+		</element>
+		<element kind="textField" uuid="e775dec3-ee19-43be-850a-4a7e7ff7e9fd" x="10" y="56" width="300" height="12" forecolor="#80CBC4" fontSize="8.0" pattern="dd MMMM yyyy HH:mm">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</title>
+	<columnHeader height="24">
+		<element kind="rectangle" uuid="50125164-33bc-4452-a2ab-8eeee6b24ca9" mode="Opaque" x="0" y="0" width="782" height="24" backcolor="#E0F2F1">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="staticText" uuid="23419d13-a42c-4fce-a48f-1605b02ebed9" x="0" y="5" width="30" height="14" forecolor="#00695C" fontSize="8.0" bold="true">
+			<text><![CDATA[ID]]></text>
+		</element>
+		<element kind="staticText" uuid="f2b6fbc8-4550-45b2-97c9-da0cb37373fb" x="30" y="5" width="175" height="14" forecolor="#00695C" fontSize="8.0" bold="true">
+			<text><![CDATA[Package Name]]></text>
+		</element>
+		<element kind="staticText" uuid="1dbb6906-320f-468a-88e0-6a23b3abcc30" x="205" y="5" width="145" height="14" forecolor="#00695C" fontSize="8.0" bold="true">
+			<text><![CDATA[Destination]]></text>
+		</element>
+		<element kind="staticText" uuid="74884408-1cef-4727-9eb6-24d22c873b5c" x="350" y="5" width="40" height="14" forecolor="#00695C" fontSize="8.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Days]]></text>
+		</element>
+		<element kind="staticText" uuid="a9dedcad-550d-4be6-9a6a-95243d46fd5b" x="390" y="5" width="90" height="14" forecolor="#00695C" fontSize="8.0" bold="true" hTextAlign="Right">
+			<text><![CDATA[Pkg Price (LKR)]]></text>
+		</element>
+		<element kind="staticText" uuid="13069426-9b24-497a-96cb-1c67951c5b74" x="480" y="5" width="55" height="14" forecolor="#00695C" fontSize="8.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Bookings]]></text>
+		</element>
+		<element kind="staticText" uuid="2414fe00-6306-428b-9864-9c34ea891fe7" x="535" y="5" width="120" height="14" forecolor="#00695C" fontSize="8.0" bold="true" hTextAlign="Right">
+			<text><![CDATA[Total Revenue (LKR)]]></text>
+		</element>
+		<element kind="staticText" uuid="d9780e7e-57a4-4d13-ac6b-593d2769a6fb" x="655" y="5" width="95" height="14" forecolor="#00695C" fontSize="8.0" bold="true" hTextAlign="Right">
+			<text><![CDATA[Avg Payment (LKR)]]></text>
+		</element>
+		<element kind="staticText" uuid="4667560b-9bd7-4051-a4cb-e8770dcefcca" x="750" y="5" width="32" height="14" forecolor="#00695C" fontSize="8.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Status]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<element kind="textField" uuid="520d2750-ae4d-4241-b0fd-af9c273ad23e" x="0" y="3" width="30" height="14" fontSize="8.0">
+				<expression><![CDATA["P-" + $F{package_id}]]></expression>
+			</element>
+			<element kind="textField" uuid="31550955-4001-42e4-85de-54b9bf6f188b" x="30" y="3" width="175" height="14" fontSize="8.0" blankWhenNull="true" bold="true">
+				<expression><![CDATA[$F{package_name}]]></expression>
+			</element>
+			<element kind="textField" uuid="d9a30eff-9ad1-4370-99ea-56c5a8f79195" x="205" y="3" width="145" height="14" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{destination}]]></expression>
+			</element>
+			<element kind="textField" uuid="2df47194-993c-4a4b-8ac3-66403ae7ae09" x="350" y="3" width="40" height="14" fontSize="8.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{duration_days} + " days"]]></expression>
+			</element>
+			<element kind="textField" uuid="362d07d2-bbee-42b2-b419-a32c1a435f17" x="390" y="3" width="90" height="14" fontSize="8.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{package_price}]]></expression>
+			</element>
+			<element kind="textField" uuid="9d628293-c182-4c0e-a853-80a76111cd4f" x="480" y="3" width="55" height="14" forecolor="#1A73E8" fontSize="8.0" blankWhenNull="true" bold="true" hTextAlign="Center">
+				<expression><![CDATA[$F{total_bookings}]]></expression>
+			</element>
+			<element kind="textField" uuid="3dd3bd19-83c9-4787-9e44-565a6af4c6c9" x="535" y="3" width="120" height="14" forecolor="#1A7334" fontSize="9.0" pattern="#,##0.00" blankWhenNull="true" bold="true" hTextAlign="Right">
+				<expression><![CDATA[$F{total_revenue}]]></expression>
+			</element>
+			<element kind="textField" uuid="4e5989e9-2599-48f1-be2a-ba03381b453a" x="655" y="3" width="95" height="14" fontSize="8.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{avg_payment}]]></expression>
+			</element>
+			<element kind="textField" uuid="a09f8edf-a35d-4f04-98e0-41b94526b051" x="750" y="3" width="32" height="14" fontSize="8.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{package_status}]]></expression>
+			</element>
+			<element kind="line" uuid="50ae8b4e-50fb-45a4-978c-87ad64f8f1c8" x="0" y="19" width="782" height="1" forecolor="#E0F2F1"/>
+		</band>
+	</detail>
+	<summary height="280">
+		<element kind="chart" chartType="line" uuid="b2c3d4e5-2222-4b3c-8d4e-000000000002" x="0" y="0" width="782" height="200" showLegend="true" legendPosition="Bottom" titlePosition="Top" titleColor="#00695C" backcolor="#FFFFFF">
+			<titleExpression><![CDATA["Package Revenue Trend by Status - Decision Insight"]]></titleExpression>
+			<dataset kind="category">
+				<series>
+					<seriesExpression><![CDATA[$F{package_status}]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{package_name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{total_revenue}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot backcolor="#E0F2F1" orientation="Vertical" backgroundAlpha="1.0" foregroundAlpha="0.9" showLines="true" showShapes="true">
+				<seriesColor order="0" color="#00695C"/>
+				<seriesColor order="1" color="#FF8F00"/>
+				<seriesColor order="2" color="#1A73E8"/>
+				<seriesColor order="3" color="#D32F2F"/>
+			</plot>
+		</element>
+		<element kind="line" uuid="b46e3f6c-a476-4566-9d4e-0d435db283cd" x="0" y="209" width="782" height="1" forecolor="#00695C">
+			<pen lineWidth="2.0"/>
+		</element>
+		<element kind="staticText" uuid="def4f4d6-042a-408a-b0bc-d354297f3cb4" x="0" y="218" width="300" height="22" forecolor="#00695C" fontSize="13.0" bold="true">
+			<text><![CDATA[REVENUE SUMMARY]]></text>
+		</element>
+		<element kind="staticText" uuid="6004cd0d-e295-4c02-8e21-8a238b1a2048" x="0" y="244" width="200" height="16" fontSize="9.0">
+			<text><![CDATA[Total Package Bookings:]]></text>
+		</element>
+		<element kind="textField" uuid="edb53f7f-2eba-44bc-b1cc-b736716b770e" x="200" y="244" width="100" height="16" forecolor="#1A73E8" fontSize="9.0" bold="true">
+			<expression><![CDATA[$V{GRAND_BOOKINGS}]]></expression>
+		</element>
+		<element kind="staticText" uuid="ed48ba33-72c0-46fe-b6e8-e53302787283" x="400" y="244" width="250" height="20" fontSize="11.0" hTextAlign="Right">
+			<text><![CDATA[TOTAL PACKAGE REVENUE (LKR):]]></text>
+		</element>
+		<element kind="textField" uuid="24ee2142-120f-493e-9f43-a2116133fda6" x="650" y="244" width="132" height="20" forecolor="#1A7334" fontSize="14.0" pattern="#,##0.00" bold="true" hTextAlign="Right">
+			<expression><![CDATA[$V{GRAND_REVENUE}]]></expression>
+		</element>
+		<element kind="staticText" uuid="0812b526-665c-4618-a643-26968237ed66" x="400" y="262" width="250" height="10" fontSize="9.0" hTextAlign="Right">
+			<text><![CDATA[Highest Package Revenue (LKR):]]></text>
+		</element>
+		<element kind="textField" uuid="34895431-6ecd-41f4-b6b8-073cb7706888" x="650" y="262" width="132" height="10" forecolor="#FF8F00" fontSize="9.0" pattern="#,##0.00" bold="true" hTextAlign="Right">
+			<expression><![CDATA[$V{MAX_REVENUE}]]></expression>
+		</element>
+	</summary>
+</jasperReport>

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Main-Class: view.LoginForm
+Implementation-Title: TourEase Hotel & Tourism Management System
+Implementation-Version: 1.0.0
+Implementation-Vendor: TourEase Team
+Created-By: Apache Ant / NetBeans
+Class-Path: lib/mysql-connector-j.jar lib/jasperreports.jar lib/commons-collections.jar lib/commons-beanutils.jar lib/commons-logging.jar lib/itext.jar lib/poi.jar
+
